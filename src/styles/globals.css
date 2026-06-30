@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(17, 24, 39, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.7);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.9);
+}
