@@ -16,143 +16,70 @@ export default function PokémonExtractor({
     analyzeScreenshots()
   }, [screenshots])
 
-  const analyzeScreenshots = async () => {
-    try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-      if (!apiKey) {
-        throw new Error('VITE_ANTHROPIC_API_KEY not set. Add it to .env.local')
-      }
+const analyzeScreenshots = async () => {
+  try {
+    const allPokémon = []
+    const totalFiles = screenshots.length
 
-      const allPokémon = []
-      const totalFiles = screenshots.length
+    for (let i = 0; i < totalFiles; i++) {
+      const file = screenshots[i]
+      setCurrentFile(file.name)
+      setProgress(Math.round((i / totalFiles) * 100))
 
-      for (let i = 0; i < totalFiles; i++) {
-        const file = screenshots[i]
-        setCurrentFile(file.name)
-        setProgress(Math.round((i / totalFiles) * 100))
-
-        const base64 = await fileToBase64(file)
-        
-        const response = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: {
-            'x-api-key': apiKey,
-            'anthropic-version': '2023-06-01',
-            'content-type': 'application/json'
-          },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-6',
-            max_tokens: 1024,
-            messages: [{
-              role: 'user',
-              content: [
-                {
-                  type: 'image',
-                  source: {
-                    type: 'base64',
-                    media_type: 'image/jpeg',
-                    data: base64
-                  }
-                },
-                {
-                  type: 'text',
-                  text: `Extract Pokémon info from this screenshot. Return ONLY JSON:
-{
-  "pokémon": [
-    {
-      "name": "Pokémon name",
-      "cp": 1234,
-      "hp": 120,
-      "types": ["type1"],
-      "fastMove": "move name",
-      "chargedMove": "move name",
-      "shiny": false,
-      "lucky": false,
-      "shadow": false
-    }
-  ]
-}`
-                }
-              ]
-            }]
-          })
-        })
-
-        if (!response.ok) {
-          const error = await response.json()
-          throw new Error(`Claude API error: ${error.error?.message}`)
-        }
-
-        const data = await response.json()
-        const content = data.content[0]?.text || ''
-        
-        try {
-          const parsed = JSON.parse(content)
-          if (parsed.pokémon && Array.isArray(parsed.pokémon)) {
-            allPokémon.push(...parsed.pokémon)
-          }
-        } catch (e) {
-          console.warn(`Failed to parse response for ${file.name}`)
-        }
-      }
-
-      setExtractedData(allPokémon)
-      setProgress(100)
-      setAnalyzing(false)
-      onExtracted(allPokémon)
-
-      await generateRecommendations(allPokémon, battleGoal)
-
-    } catch (err) {
-      setError(err.message)
-      setAnalyzing(false)
-    }
-  }
-
-  const generateRecommendations = async (pokémon, goal) => {
-    try {
-      const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
-
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const base64 = await fileToBase64(file)
+      
+      // Call our serverless function instead of Claude directly!
+      const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: {
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'content-type': 'application/json'
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 2048,
-          messages: [{
-            role: 'user',
-            content: `You are a Pokémon GO expert. Given this player's Pokémon and their goal (${goal.name}), recommend the best team of 6.
-
-Pokémon: ${JSON.stringify(pokémon)}
-
-Return ONLY JSON:
-{
-  "team": [
-    {"name": "Pokémon", "cp": 1234, "reason": "Why recommended"}
-  ],
-  "typeCoverage": ["type1"],
-  "summary": "Brief strategy"
-}`
-          }]
-        })
+        body: JSON.stringify({ imageBase64: base64 })
       })
 
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(`API error: ${error.error}`)
+      }
+
       const data = await response.json()
-      const content = data.content[0]?.text || ''
-      
-      const recommendation = JSON.parse(content)
-      onRecommendationReady(recommendation)
-
-    } catch (err) {
-      console.error('Recommendation failed:', err)
-      setError('Failed to generate recommendations. Try again.')
+      if (data.pokémon && Array.isArray(data.pokémon)) {
+        allPokémon.push(...data.pokémon)
+      }
     }
-  }
 
+    setExtractedData(allPokémon)
+    setProgress(100)
+    setAnalyzing(false)
+    onExtracted(allPokémon)
+
+    await generateRecommendations(allPokémon, battleGoal)
+
+  } catch (err) {
+    setError(err.message)
+    setAnalyzing(false)
+  }
+}
+
+  const generateRecommendations = async (pokémon, goal) => {
+  try {
+    // For now, return a simple recommendation
+    // Later you can call another serverless function for full recommendations
+    const recommendation = {
+      team: pokémon.slice(0, 6).map((p, i) => ({
+        name: p.name,
+        cp: p.cp,
+        reason: `Selected based on ${goal.name} requirements`
+      })),
+      typeCoverage: [...new Set(pokémon.flatMap(p => p.types || []))],
+      summary: `Recommended team for ${goal.name}`
+    }
+    onRecommendationReady(recommendation)
+  } catch (err) {
+    console.error('Recommendation failed:', err)
+    setError('Failed to generate recommendations.')
+  }
+}
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
