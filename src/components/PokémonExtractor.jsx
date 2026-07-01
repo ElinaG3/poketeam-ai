@@ -26,16 +26,15 @@ export default function PokémonExtractor({
         setCurrentFile(file.name)
         setProgress(Math.round((i / totalFiles) * 100))
 
-        const base64 = await fileToBase64(file)
-        
-        // Call our serverless function!
-        const response = await fetch('/api/analyze', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ imageBase64: base64 })
-        })
+        const { base64, mimeType } = await fileToBase64(file)
+
+const response = await fetch('/api/analyze', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ imageBase64: base64, mimeType })
+})
 
         if (!response.ok) {
           const error = await response.json()
@@ -80,16 +79,19 @@ export default function PokémonExtractor({
   }
 
   const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        const base64 = reader.result.split(',')[1]
-        resolve(base64)
-      }
-      reader.onerror = reject
-    })
-  }
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      const result = reader.result
+      const base64 = result.split(',')[1]
+      const mimeType = file.type || 'image/jpeg'
+      resolve({ base64, mimeType })
+    }
+    reader.onerror = reject
+  })
+}
+  
 
   return (
     <div className="max-w-2xl mx-auto">
