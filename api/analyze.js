@@ -4,30 +4,30 @@ export default async function handler(req, res) {
   }
 
   try {
-  const { imageBase64, mimeType } = req.body  // ← ADD mimeType here
-  const apiKey = process.env.ANTHROPIC_API_KEY
+    const { imageBase64, mimeType } = req.body
+    const apiKey = process.env.ANTHROPIC_API_KEY
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 1024,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'image',
-            source: {
-              type: 'base64',
-              media_type: mimeType || 'image/jpeg',  // ← USE mimeType here
-              data: imageBase64
-            }
-          },
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1024,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'image',
+              source: {
+                type: 'base64',
+                media_type: mimeType || 'image/jpeg',
+                data: imageBase64
+              }
+            },
             {
               type: 'text',
               text: `Extract Pokémon info from this screenshot. Return ONLY JSON:
@@ -54,7 +54,11 @@ export default async function handler(req, res) {
     }
 
     const data = await response.json()
-    const content = data.content[0]?.text || ''
+    let content = data.content[0]?.text || ''
+
+    // Strip markdown code blocks if present
+    content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
+
     const parsed = JSON.parse(content)
 
     return res.status(200).json(parsed)
