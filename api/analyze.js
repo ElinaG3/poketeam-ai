@@ -29,48 +29,25 @@ export default async function handler(req, res) {
               }
             },
             {
-  type: 'text',
-  text: `You are a Pokémon GO expert. Extract data AND provide strategic recommendations.
+              type: 'text',
+              text: `Extract Pokémon from this screenshot and provide recommendations.
 
-Data to extract:
+Return ONLY this JSON structure - no markdown, no extra text:
 {
-  "pokémon": [{"name": "", "cp": 0, "hp": 0, "types": [], "fastMove": "", "chargedMove": ""}]
-}
-
-Then provide detailed analysis:
-{
-  "analysis": {
-    "primaryTeam": [
-      {
-        "name": "Name",
-        "cp": 1234,
-        "reason": "Why chosen - type coverage, stats, etc",
-        "actions": [
-          "Power up to level 50 for Great League",
-          "Change fast move to Thunder Shock for better DPS",
-          "Keep charged move as is"
-        ]
-      }
-    ],
-    "alternativeTeam": [
-      {
-        "name": "Alternative Pokémon",
-        "cp": 1200,
-        "reason": "Why this is second choice"
-      }
-    ],
-    "priorityActions": [
-      "IMMEDIATE: Power up Raticat to max CP for Great League",
-      "Evolve Hitmonlee if you have candy - better moveset after evolution",
-      "Purify Shadow Pokémon if any - adds 20% damage boost",
-      "Use TM to change moves if current ones are suboptimal"
-    ],
-    "summary": "Overall strategy and tips"
-  }
-}
-
-Return ONLY valid JSON with both pokémon data AND analysis`
-}
+  "pokémon": [
+    {
+      "name": "Pokémon name",
+      "cp": 1234,
+      "hp": 120,
+      "types": ["type1"],
+      "fastMove": "move name",
+      "chargedMove": "move name",
+      "recommendation": "Why this Pokémon is good for this league",
+      "actions": "What to do: power up, evolve, change move, purify, etc"
+    }
+  ],
+  "summary": "Overall team strategy and tips"
+}`
             }
           ]
         }]
