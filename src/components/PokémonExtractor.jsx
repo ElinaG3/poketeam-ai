@@ -16,70 +16,69 @@ export default function PokémonExtractor({
     analyzeScreenshots()
   }, [screenshots])
 
-const analyzeScreenshots = async () => {
-  try {
-    const allPokémon = []
-    const totalFiles = screenshots.length
+  const analyzeScreenshots = async () => {
+    try {
+      const allPokémon = []
+      const totalFiles = screenshots.length
 
-    for (let i = 0; i < totalFiles; i++) {
-      const file = screenshots[i]
-      setCurrentFile(file.name)
-      setProgress(Math.round((i / totalFiles) * 100))
+      for (let i = 0; i < totalFiles; i++) {
+        const file = screenshots[i]
+        setCurrentFile(file.name)
+        setProgress(Math.round((i / totalFiles) * 100))
 
-      const base64 = await fileToBase64(file)
-      
-      // Call our serverless function instead of Claude directly!
-      const response = await fetch('/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ imageBase64: base64 })
-      })
+        const base64 = await fileToBase64(file)
+        
+        // Call our serverless function!
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ imageBase64: base64 })
+        })
 
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(`API error: ${error.error}`)
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(`API error: ${error.error}`)
+        }
+
+        const data = await response.json()
+        if (data.pokémon && Array.isArray(data.pokémon)) {
+          allPokémon.push(...data.pokémon)
+        }
       }
 
-      const data = await response.json()
-      if (data.pokémon && Array.isArray(data.pokémon)) {
-        allPokémon.push(...data.pokémon)
-      }
+      setExtractedData(allPokémon)
+      setProgress(100)
+      setAnalyzing(false)
+      onExtracted(allPokémon)
+
+      await generateRecommendations(allPokémon, battleGoal)
+
+    } catch (err) {
+      setError(err.message)
+      setAnalyzing(false)
     }
-
-    setExtractedData(allPokémon)
-    setProgress(100)
-    setAnalyzing(false)
-    onExtracted(allPokémon)
-
-    await generateRecommendations(allPokémon, battleGoal)
-
-  } catch (err) {
-    setError(err.message)
-    setAnalyzing(false)
   }
-}
 
   const generateRecommendations = async (pokémon, goal) => {
-  try {
-    // For now, return a simple recommendation
-    // Later you can call another serverless function for full recommendations
-    const recommendation = {
-      team: pokémon.slice(0, 6).map((p, i) => ({
-        name: p.name,
-        cp: p.cp,
-        reason: `Selected based on ${goal.name} requirements`
-      })),
-      typeCoverage: [...new Set(pokémon.flatMap(p => p.types || []))],
-      summary: `Recommended team for ${goal.name}`
+    try {
+      const recommendation = {
+        team: pokémon.slice(0, 6).map((p, i) => ({
+          name: p.name,
+          cp: p.cp,
+          reason: `Recommended for ${goal.name}`
+        })),
+        typeCoverage: [...new Set(pokémon.flatMap(p => p.types || []))],
+        summary: `Top 6 Pokémon optimized for ${goal.name}`
+      }
+      onRecommendationReady(recommendation)
+    } catch (err) {
+      console.error('Recommendation failed:', err)
+      setError('Failed to generate recommendations.')
     }
-    onRecommendationReady(recommendation)
-  } catch (err) {
-    console.error('Recommendation failed:', err)
-    setError('Failed to generate recommendations.')
   }
-}
+
   const fileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
