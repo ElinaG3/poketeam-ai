@@ -25,11 +25,11 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
     <div className="rounded-xl overflow-hidden border border-gray-700 hover:border-red-500 transition-all hover:shadow-lg hover:shadow-red-500/20 bg-gradient-to-br from-gray-800 to-gray-900">
       <div className="aspect-square bg-gray-900 flex items-center justify-center overflow-hidden">
         <img
-          src={pokémonImages[pokémon.name] || 'https://via.placeholder.com/200'}
+          src={pokémonImages[pokémon.name] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/1.png'}
           alt={pokémon.name}
           className="w-full h-full object-contain p-2"
           onError={(e) => {
-            e.target.src = 'https://via.placeholder.com/200?text=Pokemon'
+            e.target.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/25.png'
           }}
         />
       </div>
@@ -44,9 +44,16 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
         </div>
 
         <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-1">Reason:</p>
-          <p className="text-sm text-gray-300 leading-tight">{pokémon.reason}</p>
+          <p className="text-xs text-gray-500 mb-1">Why This Pokémon:</p>
+          <p className="text-sm text-gray-300 leading-tight">{pokémon.recommendation}</p>
         </div>
+
+        {pokémon.actions && (
+          <div className="mb-3">
+            <p className="text-xs text-gray-500 mb-1">Actions to Take:</p>
+            <p className="text-sm text-yellow-400 leading-tight font-medium">{pokémon.actions}</p>
+          </div>
+        )}
       </div>
     </div>
   )
