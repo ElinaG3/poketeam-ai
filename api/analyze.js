@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
+        model: process.env.CLAUDE_MODEL || 'claude-sonnet-4-6',
         max_tokens: 1024,
         messages: [{
           role: 'user',
@@ -29,20 +29,48 @@ export default async function handler(req, res) {
               }
             },
             {
-              type: 'text',
-              text: `Extract Pokémon info from this screenshot. Return ONLY JSON:
+  type: 'text',
+  text: `You are a Pokémon GO expert. Extract data AND provide strategic recommendations.
+
+Data to extract:
 {
-  "pokémon": [
-    {
-      "name": "Pokémon name",
-      "cp": 1234,
-      "hp": 120,
-      "types": ["type1"],
-      "fastMove": "move name",
-      "chargedMove": "move name"
-    }
-  ]
-}`
+  "pokémon": [{"name": "", "cp": 0, "hp": 0, "types": [], "fastMove": "", "chargedMove": ""}]
+}
+
+Then provide detailed analysis:
+{
+  "analysis": {
+    "primaryTeam": [
+      {
+        "name": "Name",
+        "cp": 1234,
+        "reason": "Why chosen - type coverage, stats, etc",
+        "actions": [
+          "Power up to level 50 for Great League",
+          "Change fast move to Thunder Shock for better DPS",
+          "Keep charged move as is"
+        ]
+      }
+    ],
+    "alternativeTeam": [
+      {
+        "name": "Alternative Pokémon",
+        "cp": 1200,
+        "reason": "Why this is second choice"
+      }
+    ],
+    "priorityActions": [
+      "IMMEDIATE: Power up Raticat to max CP for Great League",
+      "Evolve Hitmonlee if you have candy - better moveset after evolution",
+      "Purify Shadow Pokémon if any - adds 20% damage boost",
+      "Use TM to change moves if current ones are suboptimal"
+    ],
+    "summary": "Overall strategy and tips"
+  }
+}
+
+Return ONLY valid JSON with both pokémon data AND analysis`
+}
             }
           ]
         }]
