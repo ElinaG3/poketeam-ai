@@ -4,7 +4,7 @@ import ScreenshotUploader from './components/ScreenshotUploader'
 import PokémonExtractor from './components/PokémonExtractor'
 import TeamRecommendation from './components/TeamRecommendation'
 import './styles/globals.css'
-import { Analytics } from "@vercel/analytics/react";
+
 
 export default function App() {
   const [step, setStep] = useState('goal')
@@ -47,7 +47,7 @@ export default function App() {
   }
 
   return (
-    <>
+    
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
       <header className="border-b border-gray-700 bg-black/50 backdrop-blur">
         <div className="max-w-7xl mx-auto px-4 py-6">
@@ -116,7 +116,6 @@ export default function App() {
         </div>
       </footer>
     </div>
-    <Analytics />
-    </>
+    
   )
 }
