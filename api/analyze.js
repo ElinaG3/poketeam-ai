@@ -30,9 +30,9 @@ export default async function handler(req, res) {
             },
             {
               type: 'text',
-              text: `Extract Pokémon from this screenshot and provide recommendations.
+             text: `You are a Pokémon GO expert. Analyze which Pokémon to KEEP and which to TRANSFER.
 
-Return ONLY this JSON structure - no markdown, no extra text:
+For EACH Pokémon in the screenshot, provide:
 {
   "pokémon": [
     {
@@ -42,11 +42,12 @@ Return ONLY this JSON structure - no markdown, no extra text:
       "types": ["type1"],
       "fastMove": "move name",
       "chargedMove": "move name",
-      "recommendation": "Why this Pokémon is good for this league",
-      "actions": "What to do: power up, evolve, change move, purify, etc"
+      "decision": "KEEP or TRANSFER",
+      "reason": "Why keep or transfer this specific Pokémon",
+      "actions": "If KEEP: what to do (power up, evolve, change move). If TRANSFER: none"
     }
   ],
-  "summary": "Overall team strategy and tips"
+  "summary": "Overall strategy: which Pokémon are best for this league, rest should be transferred"
 }`
             }
           ]
