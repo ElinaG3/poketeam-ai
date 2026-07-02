@@ -4,8 +4,11 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
   const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
-    console.log('Recommendation data:', recommendation)
-  }, [recommendation])
+  console.log('Full recommendation:', JSON.stringify(recommendation, null, 2))
+  if (recommendation.team && recommendation.team[0]) {
+    console.log('First pokemon:', JSON.stringify(recommendation.team[0], null, 2))
+  }
+}, [recommendation])
 
   const toggleExpanded = (pokeName) => {
     setExpanded(prev => ({
@@ -29,12 +32,12 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
               <p className="text-sm text-gray-400">CP: <span className="text-yellow-500">{pokémon.cp}</span></p>
             </div>
             <div className={`px-3 py-1 rounded-lg font-bold text-sm ${
-              isKeep 
-                ? 'bg-green-600/30 text-green-400' 
-                : 'bg-red-600/30 text-red-400'
-            }`}>
-              {pokémon.decision || 'KEEP'}
-            </div>
+  pokémon.decision === 'KEEP' 
+    ? 'bg-green-600/30 text-green-400' 
+    : 'bg-red-600/30 text-red-400'
+}`}>
+  {pokémon.decision || 'UNKNOWN'}
+</div>
           </div>
 
           {/* Collapsible Details Button */}

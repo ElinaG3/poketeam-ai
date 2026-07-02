@@ -15,7 +15,7 @@ export default async function handler(req, res) {
         'content-type': 'application/json'
       },
       body: JSON.stringify({
-        model: process.env.CLAUDE_MODEL || 'claude-3-5-haiku-20241022',
+        model: 'claude-3-5-haiku-20241022',
         max_tokens: 1024,
         messages: [{
           role: 'user',
@@ -66,6 +66,8 @@ For EACH Pokémon in the screenshot, provide:
     content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
 
     const parsed = JSON.parse(content)
+console.error('API Response:', JSON.stringify(parsed))  // Log what we're returning
+return res.status(200).json(parsed)
 
     return res.status(200).json(parsed)
   } catch (error) {
