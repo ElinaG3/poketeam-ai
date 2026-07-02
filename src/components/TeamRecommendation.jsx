@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 export default function TeamRecommendation({ recommendation, pokémonData, battleGoal }) {
   const [pokémonImages, setPokémonImages] = useState({})
+  const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
     loadPokémonImages()
@@ -12,7 +13,10 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
     
     if (recommendation.team) {
       for (const poke of recommendation.team) {
-        const pokeName = poke.name.toLowerCase().replace(/\s+/g, '-')
+        // Convert name to Pokédex number - try to find pattern
+        let pokeName = poke.name.toLowerCase().replace(/\s+/g, '-').replace(/\(.*\)/, '').trim()
+        
+        // Fallback image URL with better error handling
         const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/${pokeName}.png`
         images[poke.name] = imageUrl
       }
@@ -21,42 +25,71 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
     setPokémonImages(images)
   }
 
-  const PokémonCard = ({ pokémon, index }) => (
-    <div className="rounded-xl overflow-hidden border border-gray-700 hover:border-red-500 transition-all hover:shadow-lg hover:shadow-red-500/20 bg-gradient-to-br from-gray-800 to-gray-900">
-      <div className="aspect-square bg-gray-900 flex items-center justify-center overflow-hidden">
-        <img
-          src={pokémonImages[pokémon.name] || 'https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/1.png'}
-          alt={pokémon.name}
-          className="w-full h-full object-contain p-2"
-          onError={(e) => {
-            e.target.src = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/pokemon/other/official-artwork/25.png'
-          }}
-        />
-      </div>
+  const toggleExpanded = (pokeName) => {
+    setExpanded(prev => ({
+      ...prev,
+      [pokeName]: !prev[pokeName]
+    }))
+  }
 
-      <div className="p-4">
-        <div className="flex items-start justify-between mb-2">
-          <div>
-            <h3 className="font-bold text-lg">{pokémon.name}</h3>
-            <p className="text-sm text-gray-400">CP: <span className="text-yellow-500">{pokémon.cp}</span></p>
-          </div>
-          <div className="text-2xl font-black text-red-500">#{index + 1}</div>
+  const PokémonCard = ({ pokémon, index }) => {
+    const isExpanded = expanded[pokémon.name]
+
+    return (
+      <div className="rounded-xl overflow-hidden border border-gray-700 hover:border-red-500 transition-all hover:shadow-lg hover:shadow-red-500/20 bg-gradient-to-br from-gray-800 to-gray-900">
+        
+        {/* Image Section */}
+        <div className="aspect-square bg-gray-900 flex items-center justify-center overflow-hidden">
+          <img
+            src={pokémonImages[pokémon.name]}
+            alt={pokémon.name}
+            className="w-full h-full object-contain p-2"
+            onError={(e) => {
+              e.target.style.display = 'none'
+            }}
+          />
         </div>
 
-        <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-1">Why This Pokémon:</p>
-          <p className="text-sm text-gray-300 leading-tight">{pokémon.recommendation}</p>
-        </div>
-
-        {pokémon.actions && (
-          <div className="mb-3">
-            <p className="text-xs text-gray-500 mb-1">Actions to Take:</p>
-            <p className="text-sm text-yellow-400 leading-tight font-medium">{pokémon.actions}</p>
+        {/* Info Section */}
+        <div className="p-4">
+          <div className="flex items-start justify-between mb-3">
+            <div>
+              <h3 className="font-bold text-lg">{pokémon.name}</h3>
+              <p className="text-sm text-gray-400">CP: <span className="text-yellow-500">{pokémon.cp}</span></p>
+            </div>
+            <div className="text-2xl font-black text-red-500">#{index + 1}</div>
           </div>
-        )}
+
+          {/* Collapsible Details Button */}
+          <button
+            onClick={() => toggleExpanded(pokémon.name)}
+            className="w-full py-2 px-3 rounded-lg bg-red-600/20 border border-red-600/50 text-red-400 text-sm font-medium hover:bg-red-600/30 transition-all"
+          >
+            {isExpanded ? '▼ Hide Details' : '▶ View Details'}
+          </button>
+
+          {/* Expanded Details */}
+          {isExpanded && (
+            <div className="mt-4 pt-4 border-t border-gray-700 space-y-3">
+              {pokémon.recommendation && (
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Why This Pokémon:</p>
+                  <p className="text-sm text-gray-300 leading-tight">{pokémon.recommendation}</p>
+                </div>
+              )}
+
+              {pokémon.actions && (
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Actions to Take:</p>
+                  <p className="text-sm text-yellow-400 leading-tight font-medium">{pokémon.actions}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 
   return (
     <div>
