@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-3-5-haiku-20241022',
-        max_tokens: 1024,
+        max_tokens: 500,
         messages: [{
           role: 'user',
           content: [
@@ -30,24 +30,18 @@ export default async function handler(req, res) {
             },
             {
               type: 'text',
-             text: `You are a Pokémon GO expert. Analyze which Pokémon to KEEP and which to TRANSFER.
-
-For EACH Pokémon in the screenshot, provide:
+              text: `Extract Pokémon from this screenshot. Return ONLY JSON - no markdown, no explanation:
 {
   "pokémon": [
     {
-      "name": "Pokémon name",
+      "name": "PokémonName",
       "cp": 1234,
       "hp": 120,
-      "types": ["type1"],
-      "fastMove": "move name",
-      "chargedMove": "move name",
       "decision": "KEEP or TRANSFER",
-      "reason": "Why keep or transfer this specific Pokémon",
-      "actions": "If KEEP: what to do (power up, evolve, change move). If TRANSFER: none"
+      "reason": "Why keep or transfer"
     }
   ],
-  "summary": "Overall strategy: which Pokémon are best for this league, rest should be transferred"
+  "summary": "Overall advice"
 }`
             }
           ]
@@ -61,16 +55,15 @@ For EACH Pokémon in the screenshot, provide:
 
     const data = await response.json()
     let content = data.content[0]?.text || ''
-
-    // Strip markdown code blocks if present
+    
+    // Strip markdown
     content = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-
+    
     const parsed = JSON.parse(content)
-console.error('API Response:', JSON.stringify(parsed))  // Log what we're returning
-return res.status(200).json(parsed)
-
     return res.status(200).json(parsed)
+    
   } catch (error) {
+    console.error('API Error:', error)
     return res.status(500).json({ error: error.message })
   }
 }
