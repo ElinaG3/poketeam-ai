@@ -5,8 +5,8 @@ export default function TeamRecommendation({ recommendation, pokémonData, battl
   const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
-    loadPokémonImages()
-  }, [recommendation])
+  console.log('Recommendation data:', recommendation)
+}, [recommendation])
 
   const loadPokémonImages = async () => {
     const images = {}
