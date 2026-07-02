@@ -9,11 +9,15 @@ export default function TeamRecommendation({ recommendation, battleGoal }) {
   console.log('recommendation keys:', Object.keys(recommendation || {}))
 }, [recommendation])
   return (
-    <div>
-      <h2 className="text-4xl font-black mb-8">
-        🎯 Your Team for {battleGoal.name}
-      </h2>
+  <div>
+    {/* DEBUG */}
+    <pre style={{ color: 'yellow', fontSize: '10px', position: 'fixed', top: 0, right: 0, maxWidth: '300px', maxHeight: '200px', overflow: 'auto', background: 'black', zIndex: 9999, padding: '10px' }}>
+      {JSON.stringify(recommendation, null, 2)}
+    </pre>
+    {/* END DEBUG */}
 
+    <h2>🎯 Your Team</h2>
+    {/* rest of component... */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
         {recommendation.pokémon.map((poke, idx) => (
           <div key={poke.name} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
