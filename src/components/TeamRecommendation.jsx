@@ -4,11 +4,10 @@ export default function TeamRecommendation({ recommendation, battleGoal }) {
   const [expanded, setExpanded] = useState({})
 
   useEffect(() => {
-    console.log('Data received:', recommendation)
-  }, [recommendation])
-
-  if (!recommendation.pokémon) return <div>No data</div>
-
+  console.log('FULL recommendation object:', recommendation)
+  console.log('recommendation.pokémon:', recommendation?.pokémon)
+  console.log('recommendation keys:', Object.keys(recommendation || {}))
+}, [recommendation])
   return (
     <div>
       <h2 className="text-4xl font-black mb-8">
