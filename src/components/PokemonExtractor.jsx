@@ -62,11 +62,16 @@ const response = await fetch('/api/analyze', {
 
   const generateRecommendations = async (pokemon, goal) => {
   try {
-    const recommendation = {
-      pokemon: pokemon,          // ← was: team: pokemon.slice(0, 6).map(...)
-      typeCoverage: [...new Set(pokemon.flatMap(p => p.types || []))],
-      summary: `Top 6 Pokemon optimized for ${goal.name}`
+    const response = await fetch('/api/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pokemon, goal: goal.name })
+    })
+    if (!response.ok) {
+      const error = await response.json()
+      throw new Error(`API error: ${error.error}`)
     }
+    const recommendation = await response.json()
     onRecommendationReady(recommendation)
   } catch (err) {
     console.error('Recommendation failed:', err)
