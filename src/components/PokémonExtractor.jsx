@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-export default function PokémonExtractor({ 
+export default function PokemonExtractor({ 
   screenshots, 
   battleGoal, 
   onExtracted, 
@@ -18,7 +18,7 @@ export default function PokémonExtractor({
 
   const analyzeScreenshots = async () => {
     try {
-      const allPokémon = []
+      const allPokemon = []
       const totalFiles = screenshots.length
 
       for (let i = 0; i < totalFiles; i++) {
@@ -42,17 +42,17 @@ const response = await fetch('/api/analyze', {
         }
 
         const data = await response.json()
-        if (data.pokémon && Array.isArray(data.pokémon)) {
-          allPokémon.push(...data.pokémon)
-        }
+       if (data.pokemon && Array.isArray(data.pokemon)) {
+  allPokemon.push(...data.pokemon)
+}
       }
 
-      setExtractedData(allPokémon)
+      setExtractedData(allPokemon)
       setProgress(100)
       setAnalyzing(false)
-      onExtracted(allPokémon)
+      onExtracted(allPokemon)
 
-      await generateRecommendations(allPokémon, battleGoal)
+      await generateRecommendations(allPokemon, battleGoal)
 
     } catch (err) {
       setError(err.message)
@@ -60,16 +60,16 @@ const response = await fetch('/api/analyze', {
     }
   }
 
-  const generateRecommendations = async (pokémon, goal) => {
+  const generateRecommendations = async (pokemon, goal) => {
     try {
       const recommendation = {
-        team: pokémon.slice(0, 6).map((p, i) => ({
+        team: pokemon.slice(0, 6).map((p, i) => ({
           name: p.name,
           cp: p.cp,
           reason: `Recommended for ${goal.name}`
         })),
-        typeCoverage: [...new Set(pokémon.flatMap(p => p.types || []))],
-        summary: `Top 6 Pokémon optimized for ${goal.name}`
+        typeCoverage: [...new Set(pokemon.flatMap(p => p.types || []))],
+        summary: `Top 6 Pokemon optimized for ${goal.name}`
       }
       onRecommendationReady(recommendation)
     } catch (err) {
@@ -97,7 +97,7 @@ const response = await fetch('/api/analyze', {
     <div className="max-w-2xl mx-auto">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold mb-4">🤖 AI Analysis in Progress</h2>
-        <p className="text-gray-400">Extracting Pokémon data using Claude Vision...</p>
+        <p className="text-gray-400">Extracting Pokemon data using Claude Vision...</p>
       </div>
 
       <div className="mb-8">
@@ -122,7 +122,7 @@ const response = await fetch('/api/analyze', {
 
       {extractedData.length > 0 && (
         <div className="p-4 rounded-lg bg-green-900/30 border border-green-700 text-green-300">
-          ✓ Extracted {extractedData.length} Pokémon so far...
+          ✓ Extracted {extractedData.length} Pokemon so far...
         </div>
       )}
 
@@ -140,7 +140,7 @@ const response = await fetch('/api/analyze', {
                 />
               ))}
             </div>
-            <p className="text-sm text-gray-500">Analyzing your Pokémon...</p>
+            <p className="text-sm text-gray-500">Analyzing your Pokemon...</p>
           </div>
         </div>
       )}

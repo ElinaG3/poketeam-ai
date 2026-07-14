@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import BattleGoalSelector from './components/BattleGoalSelector'
 import ScreenshotUploader from './components/ScreenshotUploader'
-import PokémonExtractor from './components/PokémonExtractor'
+import PokemonExtractor from './components/PokemonExtractor'
 import TeamRecommendation from './components/TeamRecommendation'
 import './styles/globals.css'
 
@@ -10,7 +10,7 @@ export default function App() {
   const [step, setStep] = useState('goal')
   const [battleGoal, setBattleGoal] = useState(null)
   const [screenshots, setScreenshots] = useState([])
-  const [pokémonData, setPokémonData] = useState([])
+  const [pokemonData, setPokemonData] = useState([])
   const [recommendation, setRecommendation] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -25,8 +25,8 @@ export default function App() {
     setStep('analyzing')
   }
 
-  const handlePokémonExtracted = async (data) => {
-    setPokémonData(data)
+  const handlePokemonExtracted = async (data) => {
+    setPokemonData(data)
   }
 
   const handleGoBack = () => {
@@ -36,12 +36,12 @@ export default function App() {
     } else if (step === 'analyzing') {
       setStep('upload')
       setScreenshots([])
-      setPokémonData([])
+      setPokemonData([])
     } else if (step === 'results') {
       setStep('goal')
       setBattleGoal(null)
       setScreenshots([])
-      setPokémonData([])
+      setPokemonData([])
       setRecommendation(null)
     }
   }
@@ -54,9 +54,9 @@ export default function App() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-yellow-500">
-                🔴 PokéTeam AI
+                🔴 PokeTeam AI
               </h1>
-              <p className="text-gray-400 mt-2">AI-powered Pokémon GO team optimizer</p>
+              <p className="text-gray-400 mt-2">AI-powered Pokemon GO team optimizer</p>
             </div>
             {step !== 'goal' && (
               <button
@@ -89,10 +89,10 @@ export default function App() {
         )}
 
         {step === 'analyzing' && (
-          <PokémonExtractor 
+          <PokemonExtractor 
             screenshots={screenshots}
             battleGoal={battleGoal}
-            onExtracted={handlePokémonExtracted}
+            onExtracted={handlePokemonExtracted}
             onRecommendationReady={(rec) => {
               setRecommendation(rec)
               setStep('results')
@@ -104,7 +104,7 @@ export default function App() {
         {step === 'results' && recommendation && (
           <TeamRecommendation 
             recommendation={recommendation}
-            pokémonData={pokémonData}
+            pokemonData={pokemonData}
             battleGoal={battleGoal}
           />
         )}

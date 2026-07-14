@@ -49,9 +49,9 @@ export default function ScreenshotUploader({ battleGoal, onScreenshotsSelected }
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-3xl font-bold mb-2">Upload Pokémon Screenshots</h2>
+        <h2 className="text-3xl font-bold mb-2">Upload Pokemon Screenshots</h2>
         <p className="text-gray-400">
-          From Poke Genie, Pokémon GO app, or any other source.
+          From Poke Genie, Pokemon GO app, or any other source.
           <br />
           <strong className="text-yellow-500">📸 Recommended: 20-40 screenshots</strong>
         </p>

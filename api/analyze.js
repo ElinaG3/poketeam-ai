@@ -30,11 +30,11 @@ export default async function handler(req, res) {
             },
             {
               type: 'text',
-              text: `Extract Pokémon from this screenshot. Return ONLY JSON - no markdown, no explanation:
+              text: `Extract Pokemon from this screenshot. Return ONLY JSON - no markdown, no explanation:
 {
-  "pokémon": [
+  "pokemon": [
     {
-      "name": "PokémonName",
+      "name": "PokemonName",
       "cp": 1234,
       "hp": 120,
       "decision": "KEEP or TRANSFER",

@@ -7,16 +7,16 @@ const BATTLE_GOALS = [
     icon: '⚔️',
     cpCap: 1500,
     description: 'Best for competitive PvP with CP cap',
-    whatToUpload: 'Screenshot all Pokémon that are under 1500 CP',
+    whatToUpload: 'Screenshot all Pokemon that are under 1500 CP',
     tips: [
-      'Focus on Pokémon with good bulk (HP + Defense)',
+      'Focus on Pokemon with good bulk (HP + Defense)',
       'Type variety matters more than raw stats',
       'Lower evolution stages often perform better here',
       'Check IVs - sometimes lower IVs are better for Great League!'
     ],
     searchShortcuts: [
-      'cp1500 (find Pokémon near cap)',
-      'great (shows Pokémon ranked for Great League)',
+      'cp1500 (find Pokemon near cap)',
+      'great (shows Pokemon ranked for Great League)',
       '3* or 4* (high IV catches)',
       'type:water type:grass (by type)'
     ]
@@ -27,9 +27,9 @@ const BATTLE_GOALS = [
     icon: '🗡️',
     cpCap: 2500,
     description: 'Mid-tier competitive PvP',
-    whatToUpload: 'Screenshot Pokémon between 1500-2500 CP',
+    whatToUpload: 'Screenshot Pokemon between 1500-2500 CP',
     tips: [
-      'More powerful Pokémon than Great League',
+      'More powerful Pokemon than Great League',
       'Evolved forms shine here (Charizard, Venusaur)',
       'Perfect IVs become more valuable',
       'Still need good coverage, not just raw power'
@@ -47,18 +47,18 @@ const BATTLE_GOALS = [
     icon: '👑',
     cpCap: null,
     description: 'No CP limit - bring your strongest!',
-    whatToUpload: 'Screenshot your highest CP Pokémon (2500+ CP)',
+    whatToUpload: 'Screenshot your highest CP Pokemon (2500+ CP)',
     tips: [
-      'Legendary Pokémon dominate this league',
+      'Legendary Pokemon dominate this league',
       'Perfect IVs are essential (aim for 13+/14+/15)',
-      'Mythical Pokémon are your secret weapons',
+      'Mythical Pokemon are your secret weapons',
       'Coverage matters more than bulk'
     ],
     searchShortcuts: [
-      'legendary (legendary Pokémon)',
-      'mythical (mythical Pokémon)',
+      'legendary (legendary Pokemon)',
+      'mythical (mythical Pokemon)',
       '4* (perfect or near-perfect IV)',
-      'cp3000 (show strongest Pokémon)'
+      'cp3000 (show strongest Pokemon)'
     ]
   },
   {
@@ -66,11 +66,11 @@ const BATTLE_GOALS = [
     name: 'Raid Attackers',
     icon: '💥',
     description: 'Best attackers for raid bosses',
-    whatToUpload: 'Screenshot Pokémon with high Attack stats (all CP levels)',
+    whatToUpload: 'Screenshot Pokemon with high Attack stats (all CP levels)',
     tips: [
       'Only attack stats matter (ignore Defense)',
       'Type matchup is CRITICAL - super effective wins raids',
-      'High level Pokémon (40+) are best',
+      'High level Pokemon (40+) are best',
       'Power up your attackers for each raid type',
       'Focus on 2-3 of the same type for raids'
     ],
@@ -86,16 +86,16 @@ const BATTLE_GOALS = [
     name: 'Shadow Raids',
     icon: '⚫',
     description: 'Optimized teams for Shadow raid bosses',
-    whatToUpload: 'Screenshot Shadow Pokémon with good stats (20+ level)',
+    whatToUpload: 'Screenshot Shadow Pokemon with good stats (20+ level)',
     tips: [
-      'Shadow Pokémon deal 20% more damage',
+      'Shadow Pokemon deal 20% more damage',
       'Use these ONLY for raids, not PvP',
-      'Prioritize Shadow Pokémon with strong fast moves',
+      'Prioritize Shadow Pokemon with strong fast moves',
       'Type coverage is even MORE important vs Shadows',
       'Shadow legendaries are raid gold'
     ],
     searchShortcuts: [
-      'shadow (only Shadow Pokémon)',
+      'shadow (only Shadow Pokemon)',
       'shadow& legendary',
       'shadow& type:electric',
       'level40 (high level Shadows)'
@@ -106,13 +106,13 @@ const BATTLE_GOALS = [
     name: 'Gym Defense',
     icon: '🏰',
     description: 'Defensive team for holding gyms',
-    whatToUpload: 'Screenshot your tankiest Pokémon (high CP & HP)',
+    whatToUpload: 'Screenshot your tankiest Pokemon (high CP & HP)',
     tips: [
       'Defense and HP are your priorities',
       'Slow-charge moves are better (forces shields)',
       'Type variety = attacker confusion',
       'Higher CP = stays in gym longer',
-      'Bulky Pokémon like Blissey, Umbreon, Dragonite excel'
+      'Bulky Pokemon like Blissey, Umbreon, Dragonite excel'
     ],
     searchShortcuts: [
       'defense (high Defense stats)',
@@ -131,7 +131,7 @@ const BATTLE_GOALS = [
       'NEVER transfer: Shiny, Lucky, Shadow, Purified, Legendary',
       'Compare IVs - keep highest of each species',
       'Evolve only if you have a good moveset after evolution',
-      'Save 100 IV Pokémon even if uncommon',
+      'Save 100 IV Pokemon even if uncommon',
       'Transfer low IV duplicates to free up space'
     ],
     searchShortcuts: [
@@ -205,7 +205,7 @@ export default function BattleGoalSelector({ onSelect }) {
                       </div>
                     ))}
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">Use these in Pokémon GO's search!</p>
+                  <p className="text-xs text-gray-500 mt-2">Use these in Pokemon GO's search!</p>
                 </div>
 
                 <button
@@ -229,10 +229,10 @@ export default function BattleGoalSelector({ onSelect }) {
           <div>
             <p className="font-bold text-white mb-1">✓ DO:</p>
             <ul className="space-y-1 text-gray-400">
-              <li>• Pokémon summary screen</li>
+              <li>• Pokemon summary screen</li>
               <li>• Stats & moveset visible</li>
               <li>• CP, HP, IVs clear</li>
-              <li>• One Pokémon per screenshot</li>
+              <li>• One Pokemon per screenshot</li>
             </ul>
           </div>
           <div>
@@ -240,7 +240,7 @@ export default function BattleGoalSelector({ onSelect }) {
             <ul className="space-y-1 text-gray-400">
               <li>• Blurry or partial views</li>
               <li>• Only the sprite</li>
-              <li>• Multiple Pokémon</li>
+              <li>• Multiple Pokemon</li>
               <li>• Filters or overlays</li>
             </ul>
           </div>

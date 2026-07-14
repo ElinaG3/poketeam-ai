@@ -5,7 +5,7 @@ export default function TeamRecommendation({ recommendation, battleGoal }) {
 
   useEffect(() => {
   console.log('FULL recommendation object:', recommendation)
-  console.log('recommendation.pokémon:', recommendation?.pokémon)
+  console.log('recommendation.pokemon:', recommendation?.pokemon)
   console.log('recommendation keys:', Object.keys(recommendation || {}))
 }, [recommendation])
   return (
@@ -19,7 +19,7 @@ export default function TeamRecommendation({ recommendation, battleGoal }) {
     <h2>🎯 Your Team</h2>
     {/* rest of component... */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
-        {recommendation.pokémon.map((poke, idx) => (
+        {recommendation.pokemon.map((poke, idx) => (
           <div key={poke.name} className="rounded-xl border border-gray-700 bg-gray-800 p-4">
             
             {/* Header */}
