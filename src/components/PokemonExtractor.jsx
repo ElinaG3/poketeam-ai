@@ -61,22 +61,18 @@ const response = await fetch('/api/analyze', {
   }
 
   const generateRecommendations = async (pokemon, goal) => {
-    try {
-      const recommendation = {
-        team: pokemon.slice(0, 6).map((p, i) => ({
-          name: p.name,
-          cp: p.cp,
-          reason: `Recommended for ${goal.name}`
-        })),
-        typeCoverage: [...new Set(pokemon.flatMap(p => p.types || []))],
-        summary: `Top 6 Pokemon optimized for ${goal.name}`
-      }
-      onRecommendationReady(recommendation)
-    } catch (err) {
-      console.error('Recommendation failed:', err)
-      setError('Failed to generate recommendations.')
+  try {
+    const recommendation = {
+      pokemon: pokemon,          // ← was: team: pokemon.slice(0, 6).map(...)
+      typeCoverage: [...new Set(pokemon.flatMap(p => p.types || []))],
+      summary: `Top 6 Pokemon optimized for ${goal.name}`
     }
+    onRecommendationReady(recommendation)
+  } catch (err) {
+    console.error('Recommendation failed:', err)
+    setError('Failed to generate recommendations.')
   }
+}
 
   const fileToBase64 = (file) => {
   return new Promise((resolve, reject) => {
