@@ -30,11 +30,16 @@ export default function PokemonExtractor({
 
 const response = await fetch('/api/analyze', {
   method: 'POST',
+
   headers: {
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({ imageBase64: base64, mimeType })
 })
+if (response.status === 429) {
+  setError("You've reached the hourly analysis limit. Try again in about an hour.");
+  return;
+}
 
         if (!response.ok) {
           const error = await response.json()

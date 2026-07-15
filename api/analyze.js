@@ -1,6 +1,32 @@
+// --- Rate limiter: max 10 analyses per IP per hour ---
+const RATE_LIMIT = 10;
+const WINDOW_MS = 60 * 60 * 1000;
+const ipRequests = new Map();
+
+function isRateLimited(ip) {
+  const now = Date.now();
+  const entry = ipRequests.get(ip);
+  if (!entry || now - entry.windowStart > WINDOW_MS) {
+    ipRequests.set(ip, { windowStart: now, count: 1 });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > RATE_LIMIT;
+}
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  const ip =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    'unknown';
+
+  if (isRateLimited(ip)) {
+    return res.status(429).json({
+      error: 'Rate limit reached. Try again in an hour.',
+    });
   }
 
   try {
