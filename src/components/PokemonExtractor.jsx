@@ -16,7 +16,7 @@ export default function PokemonExtractor({
     analyzeScreenshots()
   }, [screenshots])
 
-  const analyzeScreenshots = async () => {
+ const analyzeScreenshots = async () => {
     try {
       const allPokemon = []
       const totalFiles = screenshots.length
@@ -28,30 +28,33 @@ export default function PokemonExtractor({
 
         const { base64, mimeType } = await fileToBase64(file)
 
-const response = await fetch('/api/analyze', {
-  method: 'POST',
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ imageBase64: base64, mimeType })
+        })
 
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ imageBase64: base64, mimeType })
-})
-if (response.status === 429) {
-  setError("You've reached the hourly analysis limit. Try again in about an hour.");
-  return;
-}
+        if (response.status === 429) {
+          setError(
+            `Analyzed ${i} of ${totalFiles} screenshots — hourly limit reached, the rest were skipped.`
+          )
+          break   // stop sending, keep what we already have
+        }
 
         if (!response.ok) {
-          const error = await response.json()
-          throw new Error(`API error: ${error.error}`)
+          console.error(`Skipping ${file.name}: API error ${response.status}`)
+          continue   // this image failed, but the next may work
         }
 
         const data = await response.json()
-       if (data.pokemon && Array.isArray(data.pokemon)) {
-  allPokemon.push(...data.pokemon)
-}
+        if (data.pokemon && Array.isArray(data.pokemon)) {
+          allPokemon.push(...data.pokemon)
+        }
       }
 
+     
       setExtractedData(allPokemon)
       setProgress(100)
       setAnalyzing(false)

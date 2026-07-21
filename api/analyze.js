@@ -1,5 +1,5 @@
 // --- Rate limiter: max 10 analyses per IP per hour ---
-const RATE_LIMIT = 10;
+const RATE_LIMIT = 2;
 const WINDOW_MS = 60 * 60 * 1000;
 const ipRequests = new Map();
 
